@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.crue.hercules.sgi.framework.core.convert.converter.QueryCriteriaConverter;
 import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConverter;
 import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
 import org.crue.hercules.sgi.framework.web.controller.SgiErrorController;
@@ -36,7 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 // If you add @EnableWebMvc Spring Boot's autoconfiguration is disabled
 @Slf4j
 public class SgiWebConfig implements WebMvcConfigurer {
-  private static QueryCriteriaConverter queryOperationConverter = new QueryCriteriaConverter();
   private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
   private static RequestPageableArgumentResolver requestPageableArgumentResolver = new RequestPageableArgumentResolver(
       sortOperationConverter);
@@ -55,7 +53,7 @@ public class SgiWebConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     log.debug("addCorsMappings(CorsRegistry registry) - start");
-    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").exposedHeaders(
+    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH").exposedHeaders(
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_SIZE_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_COUNT_HEADER,
@@ -103,7 +101,6 @@ public class SgiWebConfig implements WebMvcConfigurer {
   @Override
   public void addFormatters(FormatterRegistry registry) {
     log.debug("addFormatters(FormatterRegistry registry) - start");
-    registry.addConverter(queryOperationConverter);
     registry.addConverter(sortOperationConverter);
     log.debug("addFormatters(FormatterRegistry registry) - end");
   }

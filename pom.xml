@@ -10,7 +10,7 @@
   <groupId>org.crue.hercules.sgi</groupId>
   <artifactId>sgi-framework-spring</artifactId>
 
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
 
   <!-- ********************************************** -->
   <!-- ******************** ABOUT ******************* -->
@@ -20,29 +20,10 @@
   <description>SGI Framework</description>
 
   <!-- ********************************************** -->
-  <!-- ************ DISTRIBUTION MANAGEMENT ********* -->
-  <!-- ********************************************** -->
-
-  <distributionManagement>
-    <repository>
-      <id>releases</id>
-      <url>${dist.repo.rel.url}</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>${dist.repo.snap.url}</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <!-- ********************************************** -->
   <!-- **************** PROPERTIES ****************** -->
   <!-- ********************************************** -->
 
   <properties>
-    <!-- Distribution Management URL's -->
-    <dist.repo.rel.url>http://nexus.treelogic.local/content/repositories/releases/</dist.repo.rel.url>
-    <dist.repo.snap.url>http://nexus.treelogic.local/content/repositories/snapshots/</dist.repo.snap.url>
-
     <!-- Encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
@@ -56,6 +37,8 @@
     <!-- Dependencies versions -->
     <jsr305.version>1.3.7</jsr305.version>
     <wiremock.version>2.27.1</wiremock.version>
+    <org.hibernate-jpamodelgen.version>5.3.15.Final</org.hibernate-jpamodelgen.version>
+    <rsql-jpa.version>5.0.9</rsql-jpa.version>
   </properties>
 
   <dependencyManagement>
@@ -65,6 +48,11 @@
         <artifactId>wiremock-jre8</artifactId>
         <version>${wiremock.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-jpamodelgen</artifactId>
+        <version>${org.hibernate-jpamodelgen.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -114,6 +102,11 @@
     <!-- ================= DATABASE =================== -->
     <!-- ============================================== -->
     <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
@@ -149,6 +142,12 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.perplexhub</groupId>
+      <artifactId>rsql-jpa-spring-boot-starter</artifactId>
+      <version>${rsql-jpa.version}</version>
+    </dependency>
+
 
     <!-- ============================================== -->
     <!-- =============== TEST SUPPORT ================= -->
@@ -209,6 +208,20 @@
             <showDeprecation>true</showDeprecation>
             <showWarnings>true</showWarnings>
             <encoding>${project.build.sourceEncoding}</encoding>
+            <annotationProcessorPaths>
+              <!-- Lombok Code Generator -->
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+              <!-- JPA Static Metamodel Generator -->
+              <path>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-jpamodelgen</artifactId>
+                <version>${org.hibernate-jpamodelgen.version}</version>
+              </path>
+            </annotationProcessorPaths>
           </configuration>
         </plugin>
         <plugin>
